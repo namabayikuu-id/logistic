@@ -58,10 +58,7 @@
   .seq-group.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay: 0.4s; }
   .seq-group.visible > *:nth-child(6) { opacity:1; transform:none; transition-delay: 0.5s; }
 
-  /* ── PARALLAX HERO ── */
-  .hero-parallax {
-    will-change: transform;
-  }
+  /* ── PARALLAX HERO placeholder ── */
 
   body {
     font-family: 'DM Sans', sans-serif;
@@ -120,15 +117,25 @@
   }
   .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
 
-  /* ── HERO ── */
-  #hero {
+  /* ── HERO STICKY SCROLL ── */
+  #hero-wrapper {
     position: relative;
+  }
+  #hero-spacer {
+    /* 4 scenes × 80vh each = 320vh total scroll space */
+    height: 320vh;
+    pointer-events: none;
+  }
+  #hero {
+    position: sticky;
+    top: 0;
     height: 100vh;
-    min-height: 700px;
+    min-height: 600px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    z-index: 1;
   }
 
   .hero-video-wrap {
@@ -171,12 +178,100 @@
     z-index: 2;
   }
 
+  /* ── HERO SCENES ── */
   .hero-content {
     position: relative;
     z-index: 10;
     text-align: center;
     padding: 0 1.5rem;
-    max-width: 900px;
+    max-width: 800px;
+    width: 100%;
+  }
+
+  .hero-scene {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1.5rem;
+    /* hidden state */
+    opacity: 0;
+    transform: translateY(32px);
+    pointer-events: none;
+    transition:
+      opacity 0.7s cubic-bezier(0.22,1,0.36,1),
+      transform 0.7s cubic-bezier(0.22,1,0.36,1);
+  }
+  .hero-scene.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .hero-scene.exit-up {
+    opacity: 0;
+    transform: translateY(-28px);
+    transition:
+      opacity 0.45s ease,
+      transform 0.45s ease;
+  }
+
+  /* pill row for scenes 1 & 2 */
+  .hero-pill-row {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    animation: fadeUp 0.5s 0.2s ease both;
+  }
+  .hero-pill {
+    background: rgba(255,255,255,0.07);
+    border: 0.5px solid rgba(255,255,255,0.14);
+    border-radius: 100px;
+    padding: 0.4rem 1rem;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+  }
+  .hero-pill.cyan {
+    background: rgba(0,229,255,0.1);
+    border-color: rgba(0,229,255,0.3);
+    color: var(--cyan);
+  }
+
+  /* scene progress dots */
+  .scene-dots {
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .scene-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: background 0.3s, transform 0.3s, width 0.3s;
+  }
+  .scene-dot.active {
+    background: var(--cyan);
+    width: 24px;
+    border-radius: 4px;
+    box-shadow: 0 0 8px var(--cyan-glow);
+  }
+
+  /* scene progress bar (thin line at bottom of hero) */
+  .hero-progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--amber));
+    z-index: 20;
+    transition: width 0.1s linear;
+    width: 0%;
   }
 
   .hero-badge {
@@ -696,34 +791,81 @@
   </ul>
 </nav>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-video-wrap">
-    <video autoplay muted loop playsinline>
-      <!-- Ganti src dengan path video Anda: hero.mp4 -->
-      <source src="hero.mp4" type="video/mp4">
-    </video>
-  </div>
-
-  <div class="hero-content hero-parallax">
-    <div class="hero-badge">Platform Logistik Terintegrasi</div>
-    <h1>Kirim Lebih <em>Cepat</em>,<br>Kelola Lebih <em>Cerdas</em></h1>
-    <p class="hero-sub">
-      NexLog menghubungkan armada, gudang, dan pelanggan Anda dalam satu ekosistem digital —
-      real-time, terukur, dan tanpa batas geografis.
-    </p>
-    <div class="hero-actions">
-      <a href="#cta" class="btn-primary">Coba Gratis 14 Hari</a>
-      <a href="#how" class="btn-ghost">Lihat Demo →</a>
+<!-- HERO: sticky scroll storytelling -->
+<div id="hero-wrapper">
+  <!-- sticky panel yang tetap di layar -->
+  <section id="hero">
+    <div class="hero-video-wrap">
+      <video autoplay muted loop playsinline>
+        <source src="hero.mp4" type="video/mp4">
+      </video>
     </div>
-  </div>
 
-  <div class="hero-bottom-fade"></div>
-  <div class="scroll-hint">
-    <div class="line"></div>
-    Scroll
-  </div>
-</section>
+    <!-- scene container -->
+    <div class="hero-content" id="hero-content">
+
+      <!-- scene 0: default / opening -->
+      <div class="hero-scene active" data-scene="0">
+        <div class="hero-badge">Platform Logistik Terintegrasi</div>
+        <h1>Kirim Lebih <em>Cepat</em>,<br>Kelola Lebih <em>Cerdas</em></h1>
+        <p class="hero-sub">NexLog menghubungkan armada, gudang, dan pelanggan Anda dalam satu ekosistem digital — real-time, terukur, tanpa batas.</p>
+        <div class="hero-actions">
+          <a href="#cta" class="btn-primary">Coba Gratis 14 Hari</a>
+          <a href="#services" class="btn-ghost">Lihat Demo →</a>
+        </div>
+      </div>
+
+      <!-- scene 1 -->
+      <div class="hero-scene" data-scene="1">
+        <div class="hero-badge">Pengiriman Ekspres</div>
+        <h1>Same-Day.<br>Next-Day.<br><em>Selalu Tepat Waktu.</em></h1>
+        <p class="hero-sub">Armada kami menjangkau 450+ kota di Indonesia — dengan jaminan on-time delivery 98% setiap harinya.</p>
+        <div class="hero-pill-row">
+          <span class="hero-pill">🚚 Same-day delivery</span>
+          <span class="hero-pill">📍 450+ kota</span>
+          <span class="hero-pill cyan">98% on-time</span>
+        </div>
+      </div>
+
+      <!-- scene 2 -->
+      <div class="hero-scene" data-scene="2">
+        <div class="hero-badge">Teknologi AI</div>
+        <h1>Rute Lebih Pintar,<br>Biaya Lebih <em>Hemat 35%.</em></h1>
+        <p class="hero-sub">Algoritma AI kami mengoptimasi setiap perjalanan secara real-time — mempertimbangkan traffic, kapasitas, dan prioritas SLA.</p>
+        <div class="hero-pill-row">
+          <span class="hero-pill">🧠 AI routing</span>
+          <span class="hero-pill cyan">Hemat 35% biaya</span>
+          <span class="hero-pill">⚡ Real-time</span>
+        </div>
+      </div>
+
+      <!-- scene 3 -->
+      <div class="hero-scene" data-scene="3">
+        <div class="hero-badge">Visibilitas Penuh</div>
+        <h1>Pantau Semua<br>dari <em>Satu Dashboard.</em></h1>
+        <p class="hero-sub">Track armada, paket, dan performa tim Anda dalam satu layar. 50+ metrik, live tanpa delay.</p>
+        <div class="hero-actions">
+          <a href="#cta" class="btn-primary">Mulai Sekarang →</a>
+          <a href="#features" class="btn-ghost">Lihat Fitur</a>
+        </div>
+      </div>
+
+      <!-- scene indicator dots -->
+      <div class="scene-dots" id="scene-dots">
+        <span class="scene-dot active"></span>
+        <span class="scene-dot"></span>
+        <span class="scene-dot"></span>
+        <span class="scene-dot"></span>
+      </div>
+    </div>
+
+    <div class="hero-bottom-fade"></div>
+    <div class="hero-progress" id="hero-progress"></div>
+  </section>
+
+  <!-- scroll spacer — scroll ini yang triggerkan scene pergantian -->
+  <div id="hero-spacer"></div>
+</div>
 
 <!-- STATS -->
 <div class="stats-bar">
@@ -1025,7 +1167,83 @@
     el.classList.add('active');
   }
 
-  /* ── SCROLL SEQUENCE ENGINE ── */
+  /* ══════════════════════════════════════════
+     HERO SCROLL-SCENE ENGINE
+     ══════════════════════════════════════════ */
+  const SCENES       = 4;
+  const SCENE_HEIGHT = window.innerHeight * 0.8; // px per scene
+  const wrapper      = document.getElementById('hero-wrapper');
+  const spacer       = document.getElementById('hero-spacer');
+  const scenes       = document.querySelectorAll('.hero-scene');
+  const dots         = document.querySelectorAll('.scene-dot');
+  const heroProgress = document.getElementById('hero-progress');
+
+  // set spacer height dynamically (scenes × scene height)
+  function updateSpacer() {
+    spacer.style.height = (SCENES * window.innerHeight * 0.8) + 'px';
+  }
+  updateSpacer();
+  window.addEventListener('resize', updateSpacer);
+
+  let currentScene = 0;
+
+  function activateScene(idx) {
+    if (idx === currentScene) return;
+
+    // exit current
+    scenes[currentScene].classList.remove('active');
+    scenes[currentScene].classList.add('exit-up');
+    setTimeout(() => scenes[currentScene].classList.remove('exit-up'), 500);
+
+    // enter new
+    scenes[idx].classList.add('active');
+
+    // dots
+    dots[currentScene].classList.remove('active');
+    dots[idx].classList.add('active');
+
+    currentScene = idx;
+  }
+
+  function onHeroScroll() {
+    const wrapperTop = wrapper.getBoundingClientRect().top;
+    const scrolledIn = -wrapperTop; // how far into the sticky zone
+
+    if (scrolledIn < 0) {
+      // above hero — show scene 0
+      activateScene(0);
+      if (heroProgress) heroProgress.style.width = '0%';
+      return;
+    }
+
+    const totalScroll = SCENES * SCENE_HEIGHT;
+    const progress    = Math.min(scrolledIn / totalScroll, 1);
+    const sceneIdx    = Math.min(Math.floor(scrolledIn / SCENE_HEIGHT), SCENES - 1);
+
+    activateScene(sceneIdx);
+
+    if (heroProgress) {
+      heroProgress.style.width = (progress * 100) + '%';
+    }
+  }
+
+  // initialise scene 0
+  scenes[0].classList.add('active');
+  dots[0].classList.add('active');
+
+  /* ── SCROLL HANDLER ── */
+  function onScroll() {
+    onHeroScroll();
+
+    // page progress bar
+    const scrolled  = window.scrollY;
+    const maxScroll = document.body.scrollHeight - window.innerHeight;
+    if (progressBar) progressBar.style.width = Math.round((scrolled / maxScroll) * 100) + '%';
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ── SCROLL SEQUENCE (rest of page) ── */
   const seqEls    = document.querySelectorAll('.seq');
   const seqGroups = document.querySelectorAll('.seq-group');
 
@@ -1041,41 +1259,22 @@
   seqEls.forEach(el => seqObserver.observe(el));
   seqGroups.forEach(el => seqObserver.observe(el));
 
-  /* ── HERO PARALLAX ── */
-  const heroContent = document.querySelector('.hero-parallax');
-  const heroVideo   = document.querySelector('.hero-video-wrap video');
-
-  function onScroll() {
-    const sy = window.scrollY;
-    if (heroContent) {
-      heroContent.style.transform = `translateY(${sy * 0.28}px)`;
-      heroContent.style.opacity   = Math.max(0, 1 - sy / 420);
-    }
-    if (heroVideo) {
-      heroVideo.style.transform = `translateY(${sy * 0.14}px) scale(1.06)`;
-    }
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-
-  /* ── COUNTER ANIMATION on stat numbers ── */
+  /* ── COUNTER ANIMATION ── */
   const counterObserver = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
       e.target.querySelectorAll('.stat-num').forEach(el => {
-        const raw   = el.textContent.replace(/[^0-9.]/g, '');
-        const end   = parseFloat(raw);
+        const raw    = el.textContent.replace(/[^0-9.]/g, '');
+        const end    = parseFloat(raw);
         const suffix = el.innerHTML.replace(/[\d.]+/, '').trim();
         let start = 0;
-        const dur   = 1400;
-        const step  = 16;
-        const inc   = end / (dur / step);
+        const inc   = end / (1400 / 16);
         const timer = setInterval(() => {
           start = Math.min(start + inc, end);
           const disp = Number.isInteger(end) ? Math.round(start) : start.toFixed(1);
           el.innerHTML = disp + suffix;
           if (start >= end) clearInterval(timer);
-        }, step);
+        }, 16);
       });
       counterObserver.unobserve(e.target);
     });
@@ -1083,20 +1282,14 @@
 
   document.querySelectorAll('.stats-bar').forEach(el => counterObserver.observe(el));
 
-  /* ── SCROLL PROGRESS BAR ── */
+  /* ── PAGE PROGRESS BAR ── */
   const progressBar = document.createElement('div');
   progressBar.style.cssText = `
     position:fixed; top:0; left:0; height:2px; width:0%;
-    background: linear-gradient(90deg, #00E5FF, #FF9100);
+    background: linear-gradient(90deg,#00E5FF,#FF9100);
     z-index:9999; transition:width 0.1s linear; pointer-events:none;
   `;
   document.body.appendChild(progressBar);
-
-  window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY;
-    const maxScroll = document.body.scrollHeight - window.innerHeight;
-    progressBar.style.width = Math.round((scrolled / maxScroll) * 100) + '%';
-  }, { passive: true });
 </script>
 </body>
 </html>
