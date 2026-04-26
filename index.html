@@ -29,6 +29,40 @@
 
   html { scroll-behavior: smooth; }
 
+  /* ── SCROLL SEQUENCE STATES ── */
+  .seq {
+    opacity: 0;
+    transform: translateY(36px);
+    transition: opacity 0.75s cubic-bezier(0.22,1,0.36,1),
+                transform 0.75s cubic-bezier(0.22,1,0.36,1);
+    will-change: opacity, transform;
+  }
+  .seq.seq-left  { transform: translateX(-40px); }
+  .seq.seq-right { transform: translateX(40px); }
+  .seq.seq-scale { transform: scale(0.94); }
+  .seq.visible {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* stagger children */
+  .seq-group > * {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.6s cubic-bezier(0.22,1,0.36,1),
+                transform 0.6s cubic-bezier(0.22,1,0.36,1);
+  }
+  .seq-group.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay: 0s; }
+  .seq-group.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay: 0.1s; }
+  .seq-group.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay: 0.2s; }
+  .seq-group.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay: 0.3s; }
+  .seq-group.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay: 0.4s; }
+  .seq-group.visible > *:nth-child(6) { opacity:1; transform:none; transition-delay: 0.5s; }
+
+  /* ── PARALLAX HERO ── */
+  .hero-parallax {
+    will-change: transform;
+  }
+
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--dark);
@@ -177,11 +211,11 @@
 
   h1 {
     font-family: 'Syne', sans-serif;
-    font-size: clamp(2.8rem, 7vw, 5.5rem);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    margin-bottom: 1.5rem;
+    font-size: clamp(1.9rem, 4vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    margin-bottom: 1.25rem;
     animation: fadeUp 0.8s 0.15s ease both;
   }
   h1 em {
@@ -671,7 +705,7 @@
     </video>
   </div>
 
-  <div class="hero-content">
+  <div class="hero-content hero-parallax">
     <div class="hero-badge">Platform Logistik Terintegrasi</div>
     <h1>Kirim Lebih <em>Cepat</em>,<br>Kelola Lebih <em>Cerdas</em></h1>
     <p class="hero-sub">
@@ -693,7 +727,7 @@
 
 <!-- STATS -->
 <div class="stats-bar">
-  <div class="stats-inner">
+  <div class="stats-inner seq-group">
     <div>
       <div class="stat-num">12<span>K+</span></div>
       <div class="stat-label">Pengiriman Per Hari</div>
@@ -716,11 +750,11 @@
 <!-- SERVICES -->
 <section id="services">
   <div class="section-inner">
-    <span class="section-tag">Layanan Kami</span>
-    <h2>Solusi Lengkap<br>untuk Setiap Kebutuhan</h2>
-    <p class="section-desc">Dari last-mile delivery hingga manajemen warehouse skala enterprise — kami hadir di setiap titik rantai pasokan Anda.</p>
+    <span class="section-tag seq">Layanan Kami</span>
+    <h2 class="seq">Solusi Lengkap<br>untuk Setiap Kebutuhan</h2>
+    <p class="section-desc seq">Dari last-mile delivery hingga manajemen warehouse skala enterprise — kami hadir di setiap titik rantai pasokan Anda.</p>
 
-    <div class="services-grid">
+    <div class="services-grid seq-group">
       <div class="service-card">
         <div class="svc-icon">🚚</div>
         <h3>Pengiriman Ekspres</h3>
@@ -760,9 +794,9 @@
   <div class="section-inner">
     <div class="steps-wrap">
       <div>
-        <span class="section-tag">Cara Kerja</span>
-        <h2>Empat Langkah<br>Menuju Efisiensi</h2>
-        <div class="steps-list">
+        <span class="section-tag seq">Cara Kerja</span>
+        <h2 class="seq">Empat Langkah<br>Menuju Efisiensi</h2>
+        <div class="steps-list seq-group">
           <div class="step active" onclick="setStep(this)">
             <div class="step-num">01</div>
             <div>
@@ -795,7 +829,7 @@
       </div>
 
       <!-- animated map visual -->
-      <div class="steps-visual">
+      <div class="steps-visual seq seq-right">
         <svg class="map-graphic" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
           <!-- routes -->
           <path class="route-line" d="M 50 240 Q 150 100 250 60"/>
@@ -828,11 +862,11 @@
 <!-- FEATURES -->
 <section id="features">
   <div class="section-inner">
-    <span class="section-tag">Keunggulan Platform</span>
-    <h2>Teknologi yang<br>Bicara Hasil</h2>
-    <p class="section-desc">Dibangun di atas infrastruktur cloud-native dengan uptime 99.95% dan keamanan tingkat enterprise.</p>
+    <span class="section-tag seq">Keunggulan Platform</span>
+    <h2 class="seq">Teknologi yang<br>Bicara Hasil</h2>
+    <p class="section-desc seq">Dibangun di atas infrastruktur cloud-native dengan uptime 99.95% dan keamanan tingkat enterprise.</p>
 
-    <div class="features-grid">
+    <div class="features-grid seq-group">
       <div class="feature-card large">
         <div>
           <span class="feature-icon">🧠</span>
@@ -884,9 +918,9 @@
 <!-- TESTIMONIALS -->
 <section id="testimonials">
   <div class="section-inner">
-    <span class="section-tag">Kata Klien Kami</span>
-    <h2>Dipercaya Ribuan<br>Bisnis di Indonesia</h2>
-    <div class="testi-grid">
+    <span class="section-tag seq">Kata Klien Kami</span>
+    <h2 class="seq">Dipercaya Ribuan<br>Bisnis di Indonesia</h2>
+    <div class="testi-grid seq-group">
       <div class="testi-card">
         <div class="testi-stars">★★★★★</div>
         <p class="testi-text">"Sejak pakai NexLog, biaya logistik kami turun 28% dan keluhan keterlambatan hampir nol. Tim CS mereka juga responsif luar biasa."</p>
@@ -926,7 +960,7 @@
 
 <!-- CTA -->
 <section id="cta">
-  <div class="cta-inner">
+  <div class="cta-inner seq seq-scale">
     <span class="section-tag">Mulai Sekarang</span>
     <h2>Transformasi Logistik<br>Anda Hari Ini</h2>
     <p>Coba NexLog gratis selama 14 hari tanpa kartu kredit. Setup dalam 5 menit, skalakan kapan pun Anda siap.</p>
@@ -979,34 +1013,90 @@
 </footer>
 
 <script>
-  // navbar scroll
+  /* ── NAVBAR ── */
   const nav = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 60);
-  });
+  }, { passive: true });
 
-  // step tabs
+  /* ── STEP TABS ── */
   function setStep(el) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
     el.classList.add('active');
   }
 
-  // fade-in on scroll
-  const observer = new IntersectionObserver(entries => {
+  /* ── SCROLL SEQUENCE ENGINE ── */
+  const seqEls    = document.querySelectorAll('.seq');
+  const seqGroups = document.querySelectorAll('.seq-group');
+
+  const seqObserver = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
+        e.target.classList.add('visible');
+        seqObserver.unobserve(e.target);
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
-  document.querySelectorAll('.service-card, .feature-card, .testi-card, .step').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(el);
-  });
+  seqEls.forEach(el => seqObserver.observe(el));
+  seqGroups.forEach(el => seqObserver.observe(el));
+
+  /* ── HERO PARALLAX ── */
+  const heroContent = document.querySelector('.hero-parallax');
+  const heroVideo   = document.querySelector('.hero-video-wrap video');
+
+  function onScroll() {
+    const sy = window.scrollY;
+    if (heroContent) {
+      heroContent.style.transform = `translateY(${sy * 0.28}px)`;
+      heroContent.style.opacity   = Math.max(0, 1 - sy / 420);
+    }
+    if (heroVideo) {
+      heroVideo.style.transform = `translateY(${sy * 0.14}px) scale(1.06)`;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ── COUNTER ANIMATION on stat numbers ── */
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.querySelectorAll('.stat-num').forEach(el => {
+        const raw   = el.textContent.replace(/[^0-9.]/g, '');
+        const end   = parseFloat(raw);
+        const suffix = el.innerHTML.replace(/[\d.]+/, '').trim();
+        let start = 0;
+        const dur   = 1400;
+        const step  = 16;
+        const inc   = end / (dur / step);
+        const timer = setInterval(() => {
+          start = Math.min(start + inc, end);
+          const disp = Number.isInteger(end) ? Math.round(start) : start.toFixed(1);
+          el.innerHTML = disp + suffix;
+          if (start >= end) clearInterval(timer);
+        }, step);
+      });
+      counterObserver.unobserve(e.target);
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.stats-bar').forEach(el => counterObserver.observe(el));
+
+  /* ── SCROLL PROGRESS BAR ── */
+  const progressBar = document.createElement('div');
+  progressBar.style.cssText = `
+    position:fixed; top:0; left:0; height:2px; width:0%;
+    background: linear-gradient(90deg, #00E5FF, #FF9100);
+    z-index:9999; transition:width 0.1s linear; pointer-events:none;
+  `;
+  document.body.appendChild(progressBar);
+
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const maxScroll = document.body.scrollHeight - window.innerHeight;
+    progressBar.style.width = Math.round((scrolled / maxScroll) * 100) + '%';
+  }, { passive: true });
 </script>
 </body>
 </html>
